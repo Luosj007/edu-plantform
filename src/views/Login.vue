@@ -17,8 +17,10 @@
             <el-input type="password" v-model="form.confirmPassword" placeholder="请再次输入密码"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="handleRegister">注册</el-button>
-            <el-button type="success" @click="handleLogin">登录</el-button>
+            <el-button type="primary" @click="handleLogin" class="full-width">登录</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-link type="info" :underline="false" @click="goToRegister" class="full-width">注册账号</el-link>
           </el-form-item>
         </el-form>
       </div>
@@ -27,7 +29,7 @@
 </template>
 
 <script>
-import { ElForm, ElFormItem, ElInput, ElButton, ElMessage } from 'element-plus';
+import { ElForm, ElFormItem, ElInput, ElButton, ElMessage, ElLink } from 'element-plus';
 
 export default {
   name: 'LoginView',
@@ -35,7 +37,8 @@ export default {
     ElForm,
     ElFormItem,
     ElInput,
-    ElButton
+    ElButton,
+    ElLink
   },
   data() {
     return {
@@ -52,38 +55,33 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' }
         ],
         confirmPassword: [
-          { required: true, message: '请再次输入密码', trigger: 'blur' }
+          { required: true, message: '请再次输入密码', trigger: 'blur' },
+          {
+            validator: (rule, value, callback) => {
+              if (value !== this.form.password) {
+                callback(new Error('两次输入的密码不一致'));
+              } else {
+                callback();
+              }
+            },
+            trigger: 'blur'
+          }
         ]
       }
     };
   },
   methods: {
-    handleRegister() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          if (this.form.password !== this.form.confirmPassword) {
-            ElMessage.error('两次输入的密码不一致');
-            return;
-          }
-          // 保存账户信息到 localStorage
-          localStorage.setItem(this.form.username, this.form.password);
-          ElMessage.success('注册成功');
-        } else {
-          ElMessage.error('请填写所有必填项');
-        }
-      });
-    },
     handleLogin() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          if (this.form.password !== this.form.confirmPassword) {
-            ElMessage.error('两次输入的密码不一致');
-            return;
-          }
-          // 验证账户信息
-          const storedPassword = localStorage.getItem(this.form.username);
-          if (storedPassword && storedPassword === this.form.password) {
-            ElMessage.success('登录成功');
+          const studentPassword = localStorage.getItem(this.form.username + '_student');
+          const parentPassword = localStorage.getItem(this.form.username + '_parent');
+          if (studentPassword === this.form.password) {
+            ElMessage.success('学生登录成功');
+            this.$router.push('/student');
+          } else if (parentPassword === this.form.password) {
+            ElMessage.success('家长登录成功');
+            this.$router.push('/parent');
           } else {
             ElMessage.error('账户或密码错误');
           }
@@ -91,6 +89,9 @@ export default {
           ElMessage.error('请填写所有必填项');
         }
       });
+    },
+    goToRegister() {
+      this.$router.push('/register');
     }
   }
 };
@@ -114,5 +115,9 @@ export default {
   justify-content: center;
   align-items: center;
   padding: 20px;
+}
+
+.full-width {
+  width: 100%;
 }
 </style>
