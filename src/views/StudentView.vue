@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Student View</h1>
+    <h1>学生端</h1>
   </div>
 </template>
 

@@ -2,13 +2,12 @@
   <div>
     <div class="container">
       <div class="image-section">
-        <!-- 在这里放置图片 -->
       </div>
       <div class="form-section">
         <el-form :model="form" ref="form" :rules="rules" label-width="100px">
           <h1 style="text-align: center">教育问答平台</h1>
-          <el-form-item label="账户:" prop="username">
-            <el-input v-model="form.username" placeholder="请输入账户"></el-input>
+          <el-form-item label="用户名:" prop="username">
+            <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item label="学生密码:" prop="studentPassword">
             <el-input type="password" v-model="form.studentPassword" placeholder="请输入学生密码"></el-input>
@@ -57,19 +56,42 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: '请输入账户', trigger: 'blur' }
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 10, message: '用户名必须是 3-10位 的字符', trigger: 'blur' }
         ],
         studentPassword: [
-          { required: true, message: '请输入学生密码', trigger: 'blur' }
+          { required: true, message: '请输入学生密码', trigger: 'blur' },
+          { pattern: /^\S{6,15}$/, message: '密码必须是 6-15位 的非空字符', trigger: 'blur' }
         ],
         confirmStudentPassword: [
-          { required: true, message: '请再次输入学生密码', trigger: 'blur' }
+          { required: true, message: '请再次输入学生密码', trigger: 'blur' },
+          {
+            validator: (rule, value, callback) => {
+              if (value !== this.form.studentPassword) {
+                callback(new Error('两次输入的学生密码不一致'));
+              } else {
+                callback();
+              }
+            },
+            trigger: 'blur'
+          }
         ],
         parentPassword: [
-          { required: true, message: '请输入家长密码', trigger: 'blur' }
+          { required: true, message: '请输入家长密码', trigger: 'blur' },
+          { pattern: /^\S{6,15}$/, message: '密码必须是 6-15位 的非空字符', trigger: 'blur' }
         ],
         confirmParentPassword: [
-          { required: true, message: '请再次输入家长密码', trigger: 'blur' }
+          { required: true, message: '请再次输入家长密码', trigger: 'blur' },
+          {
+            validator: (rule, value, callback) => {
+              if (value !== this.form.parentPassword) {
+                callback(new Error('两次输入的家长密码不一致'));
+              } else {
+                callback();
+              }
+            },
+            trigger: 'blur'
+          }
         ]
       }
     };

@@ -7,8 +7,8 @@
       <div class="form-section">
         <el-form :model="form" ref="form" :rules="rules" label-width="100px">
           <h1 style="text-align: center">教育问答平台</h1>
-          <el-form-item label="账户:" prop="username">
-            <el-input v-model="form.username" placeholder="请输入账户"></el-input>
+          <el-form-item label="用户名:" prop="username">
+            <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item label="密码:" prop="password">
             <el-input type="password" v-model="form.password" placeholder="请输入密码"></el-input>
@@ -49,10 +49,12 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: '请输入账户', trigger: 'blur' }
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 10, message: '用户名必须是 3-10位 的字符', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { pattern: /^\S{6,15}$/, message: '密码必须是 6-15位 的非空字符', trigger: 'blur' }
         ],
         confirmPassword: [
           { required: true, message: '请再次输入密码', trigger: 'blur' },
@@ -83,7 +85,7 @@ export default {
             ElMessage.success('家长登录成功');
             this.$router.push('/parent');
           } else {
-            ElMessage.error('账户或密码错误');
+            ElMessage.error('用户名或密码错误');
           }
         } else {
           ElMessage.error('请填写所有必填项');
