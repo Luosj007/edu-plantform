@@ -8,13 +8,13 @@
         <el-form :model="form" ref="form" :rules="rules" label-width="100px">
           <h1 style="text-align: center">教育问答平台</h1>
           <el-form-item label="账户:" prop="username">
-            <el-input v-model="form.username"></el-input>
+            <el-input v-model="form.username" placeholder="请输入账户"></el-input>
           </el-form-item>
           <el-form-item label="密码:" prop="password">
-            <el-input type="password" v-model="form.password"></el-input>
+            <el-input type="password" v-model="form.password" placeholder="请输入密码"></el-input>
           </el-form-item>
           <el-form-item label="验证密码:" prop="confirmPassword">
-            <el-input type="password" v-model="form.confirmPassword"></el-input>
+            <el-input type="password" v-model="form.confirmPassword" placeholder="请再次输入密码"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleRegister">注册</el-button>
