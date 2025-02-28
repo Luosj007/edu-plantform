@@ -7,21 +7,21 @@ const routes = [
   },
   {
     path: '/student',
-    component: () => import('@/views/StudentView.vue'),
+    component: () => import('@/views/StudentPage.vue'),
     meta: { requiresAuth: true, role: 'student' }
   },
   {
     path: '/parent',
-    component: () => import('@/views/ParentView.vue'),
+    component: () => import('@/views/ParentPage.vue'),
     meta: { requiresAuth: true, role: 'parent' }
   },
   {
     path: '/login',
-    component: () => import('@/views/Login.vue')
+    component: () => import('@/views/LoginPage.vue')
   },
   {
     path: '/register',
-    component: () => import('@/views/Register.vue')
+    component: () => import('@/views/RegisterPage.vue')
   }
 ];
 

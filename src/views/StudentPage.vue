@@ -10,7 +10,8 @@
         router
       >
         <el-menu-item index="/student">
-          <el-icon><Location /></el-icon>
+          <!-- <el-icon><Location /></el-icon> -->
+          <el-icon><House /></el-icon>
           <span>进入首页</span>
         </el-menu-item>
         <el-menu-item index="/courses">
@@ -53,7 +54,7 @@
 </template>
 
 <script setup>
-import { Document, Location, Setting } from '@element-plus/icons-vue'
+import { Document, House, Setting } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
 
