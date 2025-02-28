@@ -17,10 +17,14 @@
           <el-icon><Document /></el-icon>
           <span>学习情况</span>
         </el-menu-item>
-        <el-menu-item index="/settings">
-          <el-icon><Setting /></el-icon>
-          <span>个性设置</span>
-        </el-menu-item>
+        <el-sub-menu index="/settings">
+          <template #title>
+            <el-icon><Setting /></el-icon>
+            <span>个性设置</span>
+          </template>
+          <el-menu-item index="/settings/information">个人信息</el-menu-item>
+          <el-menu-item index="/settings/password">重置密码</el-menu-item>
+        </el-sub-menu>
       </el-menu>
       <!-- 分割线 -->
     </el-aside>
@@ -65,11 +69,15 @@ const handleCommand = async (command) => {
       })
       // 执行退出登录的逻辑
       router.push('/login')
-} catch (error) {
+    } catch (error) {
       if (error !== 'cancel') {
         throw error
       }
     }
+  } else if (command === 'information') {
+    router.push('/settings/information')
+  } else if (command === 'password') {
+    router.push('/settings/password')
   }
 }
 </script>
@@ -89,7 +97,9 @@ const handleCommand = async (command) => {
 .el-aside .el-menu {
   text-align: center;
 }
-.el-aside .el-menu-item:hover {
+
+.el-aside .el-menu-item:hover,
+.el-aside .el-sub-menu__title:hover {
   background-color: #007acc !important;
 }
 .el-header {
