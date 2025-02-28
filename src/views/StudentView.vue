@@ -2,6 +2,7 @@
   <el-container class="layout-container">
     <el-aside width="12.5%">
       <div class="el-aside__logo"></div>
+      <!-- 这是侧边栏 -->
       <el-menu
         active-text-color="#ffd04b"
         background-color="#232323"
@@ -21,20 +22,18 @@
           <span>设置</span>
         </el-menu-item>
       </el-menu>
+      <!-- 分割线 -->
     </el-aside>
     <el-container>
       <el-header>
-        <div class="header-left">
-          用户名：<strong>这里显示用户名</strong>
-        </div>
-        <el-dropdown @command="handleCommand">
+        <h1 class="header-title">学生端</h1>
+        <el-dropdown class="header-dropdown" @command="handleCommand">
           <span class="el-dropdown-link">
             <el-icon><Setting /></el-icon>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="profile">基本资料</el-dropdown-item>
-              <el-dropdown-item command="avatar">更换头像</el-dropdown-item>
+              <el-dropdown-item command="information">个人信息</el-dropdown-item>
               <el-dropdown-item command="password">重置密码</el-dropdown-item>
               <el-dropdown-item command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
@@ -42,7 +41,8 @@
         </el-dropdown>
       </el-header>
       <el-main>
-        <h1>学生端</h1>
+        <!-- 这是主要内容区域 -->
+        <!-- <router-view /> -->
       </el-main>
     </el-container>
   </el-container>
@@ -77,24 +77,35 @@ const handleCommand = async (command) => {
 }
 .el-aside__logo {
   height: 120px;
-  background: url('@/assets/logo.png') no-repeat center / 120px auto;
+  background: url('@/assets/logo.png') no-repeat center;
+  background-size: cover;
 }
 .el-aside .el-menu {
   border-right: none;
 }
 .el-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 0 20px;
   background-color: #f5f5f5;
+  position: relative;
 }
-.header-left {
-  font-size: 16px;
+.header-title {
+  margin: 0;
+}
+.header-dropdown {
+  position: absolute;
+  right: 20px;
 }
 .el-dropdown-link {
   cursor: pointer;
   font-size: 20px;
+}
+.el-dropdown-link:focus,
+.el-dropdown-link:active {
+  outline: none;
+  box-shadow: none;
 }
 .el-main {
   padding: 20px;
