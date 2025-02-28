@@ -27,16 +27,18 @@
         <div class="header-left">
           用户名：<strong>这里显示用户名</strong>
         </div>
-        <el-dropdown>
+        <el-dropdown @command="handleCommand">
           <span class="el-dropdown-link">
             <el-icon><Setting /></el-icon>
           </span>
-          <el-dropdown-menu>
-            <el-dropdown-item>基本资料</el-dropdown-item>
-            <el-dropdown-item>更换头像</el-dropdown-item>
-            <el-dropdown-item>重置密码</el-dropdown-item>
-            <el-dropdown-item>退出登录</el-dropdown-item>
-          </el-dropdown-menu>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="profile">基本资料</el-dropdown-item>
+              <el-dropdown-item command="avatar">更换头像</el-dropdown-item>
+              <el-dropdown-item command="password">重置密码</el-dropdown-item>
+              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
         </el-dropdown>
       </el-header>
       <el-main>
@@ -48,7 +50,22 @@
 
 <script setup>
 import { Document, Location, Setting } from '@element-plus/icons-vue'
-// ...existing code...
+import { ElMessageBox } from 'element-plus'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const handleCommand = async (command) => {
+  if (command === 'logout') {
+    await ElMessageBox.confirm('你确认要进行退出么', '温馨提示', {
+      type: 'warning',
+      confirmButtonText: '确认',
+      cancelButtonText: '取消'
+    })
+    // 执行退出登录的逻辑
+    router.push('/login')
+  }
+}
 </script>
 
 <style scoped>
