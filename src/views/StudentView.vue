@@ -1,6 +1,6 @@
 <template>
   <el-container class="layout-container">
-    <el-aside width="12.5%">
+    <el-aside width="12%">
       <div class="el-aside__logo"></div>
       <!-- 这是侧边栏 -->
       <el-menu
@@ -9,17 +9,17 @@
         text-color="#fff"
         router
       >
-        <el-menu-item index="/home">
+        <el-menu-item index="/student">
           <el-icon><Location /></el-icon>
-          <span>首页</span>
+          <span>进入首页</span>
         </el-menu-item>
         <el-menu-item index="/courses">
           <el-icon><Document /></el-icon>
-          <span>课程</span>
+          <span>学习情况</span>
         </el-menu-item>
         <el-menu-item index="/settings">
           <el-icon><Setting /></el-icon>
-          <span>设置</span>
+          <span>个性设置</span>
         </el-menu-item>
       </el-menu>
       <!-- 分割线 -->
@@ -57,13 +57,19 @@ const router = useRouter()
 
 const handleCommand = async (command) => {
   if (command === 'logout') {
-    await ElMessageBox.confirm('你确认要进行退出么', '温馨提示', {
-      type: 'warning',
-      confirmButtonText: '确认',
-      cancelButtonText: '取消'
-    })
-    // 执行退出登录的逻辑
-    router.push('/login')
+    try {
+      await ElMessageBox.confirm('你确认要进行退出么', '温馨提示', {
+        type: 'warning',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      })
+      // 执行退出登录的逻辑
+      router.push('/login')
+} catch (error) {
+      if (error !== 'cancel') {
+        throw error
+      }
+    }
   }
 }
 </script>
@@ -81,7 +87,10 @@ const handleCommand = async (command) => {
   background-size: cover;
 }
 .el-aside .el-menu {
-  border-right: none;
+  text-align: center;
+}
+.el-aside .el-menu-item:hover {
+  background-color: #007acc !important;
 }
 .el-header {
   display: flex;
