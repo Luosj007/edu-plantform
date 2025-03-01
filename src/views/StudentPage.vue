@@ -14,17 +14,17 @@
           <el-icon><House /></el-icon>
           <span>进入首页</span>
         </el-menu-item>
-        <el-menu-item index="/courses">
+        <el-menu-item index="/student/courses">
           <el-icon><Document /></el-icon>
-          <span>学习情况</span>
+          <span>推荐课程</span>
         </el-menu-item>
-        <el-sub-menu index="/settings">
+        <el-sub-menu index="/student/settings">
           <template #title>
             <el-icon><Setting /></el-icon>
             <span>个性设置</span>
           </template>
-          <el-menu-item index="/settings/information">个人信息</el-menu-item>
-          <el-menu-item index="/settings/password">重置密码</el-menu-item>
+          <el-menu-item index="/student/settings/information">个人信息</el-menu-item>
+          <el-menu-item index="/student/settings/password">重置密码</el-menu-item>
         </el-sub-menu>
       </el-menu>
       <!-- 分割线 -->
@@ -47,7 +47,7 @@
       </el-header>
       <el-main>
         <!-- 这是主要内容区域 -->
-        <!-- <router-view /> -->
+        <router-view />
       </el-main>
     </el-container>
   </el-container>
@@ -76,9 +76,9 @@ const handleCommand = async (command) => {
       }
     }
   } else if (command === 'information') {
-    router.push('/settings/information')
+    router.push('/student/settings/information')
   } else if (command === 'password') {
-    router.push('/settings/password')
+    router.push('/student/settings/password')
   }
 }
 </script>
