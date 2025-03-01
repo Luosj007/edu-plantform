@@ -23,8 +23,10 @@
             <el-icon><Setting /></el-icon>
             <span>个性设置</span>
           </template>
-          <el-menu-item index="/student/settings/information">个人信息</el-menu-item>
-          <el-menu-item index="/student/settings/password">重置密码</el-menu-item>
+          <el-menu-item index="/student/settings/information">
+            <el-icon><List /></el-icon>个人信息</el-menu-item>
+          <el-menu-item index="/student/settings/password">
+            <el-icon><View /></el-icon>重置密码</el-menu-item>
         </el-sub-menu>
       </el-menu>
       <!-- 分割线 -->
@@ -54,7 +56,7 @@
 </template>
 
 <script setup>
-import { Document, House, Setting } from '@element-plus/icons-vue'
+import { Document, House, Setting,List,View } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
 
