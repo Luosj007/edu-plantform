@@ -1,9 +1,7 @@
 <template>
   <div>
-    <h1>首页</h1>
-    <!-- 这里是首页的内容 -->
+    <h1>AI 问答</h1>
     <div class="ai-chat">
-      <h2>AI 问答</h2>
       <el-input
         v-model="question"
         placeholder="请输入你的问题"

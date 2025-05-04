@@ -94,7 +94,7 @@ const handleCommand = async (command) => {
 }
 .el-aside__logo {
   height: 120px;
-  background: url('@/assets/logo.png') no-repeat center;
+  background: url('@/assets/3.jpeg') no-repeat center;
   background-size: cover;
 }
 .el-aside .el-menu {
