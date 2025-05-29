@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>AI 问答</h1>
     <div class="ai-chat">
       <div class="chat-messages">
         <div
@@ -18,7 +17,7 @@
           class="input-box"
           @keyup.enter="askQuestion"
         />
-        <el-button type="primary" @click="askQuestion" class="answer-button">回答</el-button>
+        <el-button type="primary" @click="askQuestion" class="answer-button">发送</el-button>
       </div>
     </div>
   </div>
@@ -42,13 +41,12 @@ const askQuestion = async () => {
   // 添加用户消息
   messages.value.push({ type: 'user', content: question.value });
   const userMessage = question.value;
-  question.value = ''; // 清空输入框
+  question.value = ''; 
 
-  // 模拟 AI 回复
   setTimeout(() => {
-    const aiReply = `AI 回复：您刚才说的是 "${userMessage}"，这是一个很好的问题！`;
+    const aiReply = `${userMessage}是一个很好的问题！`;
     messages.value.push({ type: 'ai', content: aiReply });
-  }, 1000); // 模拟延迟
+  }, 1000); 
 };
 </script>
 
@@ -57,11 +55,19 @@ const askQuestion = async () => {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  height: 85vh;
   border: 1px solid #ddd;
   border-radius: 5px;
   overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* 添加阴影效果 */
+  position: relative; /* 确保容器建立层叠上下文 */
+  z-index: 0;
+  background-image: url('@/assets/1.jpeg');
+  background-size: cover;       /* 覆盖整个容器 */
+  background-position: center;  /* 图片居中 */
+  background-repeat: no-repeat; /* 不重复 */
 }
+
 
 .chat-messages {
   flex: 1;
@@ -70,8 +76,9 @@ const askQuestion = async () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background-color: #f9f9f9;
+  background-color: rgba(255, 255, 255, 0.3); 
 }
+
 
 .message {
   max-width: 70%;
@@ -90,15 +97,15 @@ const askQuestion = async () => {
 
 .user-message {
   align-self: flex-end;
-  background-color: #9eea6a;
-  color: #fff;
+  background-color: #95ec69;
+  color: #333;
 }
 
 .chat-input {
   display: flex;
   gap: 10px;
   padding: 10px;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.3); 
 }
 
 .input-box {

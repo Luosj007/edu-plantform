@@ -125,6 +125,15 @@ export default {
       }
     };
   },
+  mounted() {
+    // 一个默认用户，测试作用
+    if (!localStorage.getItem('admin1_student')) {
+      localStorage.setItem('admin1_student', '111111');
+    }
+    if (!localStorage.getItem('admin1_parent')) {
+      localStorage.setItem('admin1_parent', '222222');
+    }
+  },
   methods: {
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
