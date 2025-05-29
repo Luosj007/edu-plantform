@@ -5,9 +5,9 @@
         <div
           v-for="(message, index) in messages"
           :key="index"
-          :class="['message', message.type === 'ai' ? 'ai-message' : 'user-message']"
+          :class="['message', message.role === 'assistant' ? 'ai-message' : 'user-message']"
         >
-          <div class="message-content">{{ message.content }}</div>
+          <div class="message-content" v-html="message.content"></div>
         </div>
       </div>
       <div class="chat-input">
@@ -25,12 +25,27 @@
 
 <script setup>
 import { ref } from 'vue';
+import axios from 'axios';
 import { ElMessage } from 'element-plus';
 
 const question = ref('');
 const messages = ref([
-  { type: 'ai', content: '你好，有什么可以帮您的吗？' },
+  { role: 'assistant', content: '你好，有什么可以帮您的吗？' },
 ]);
+
+const API_KEY = ''
+
+function markdownToHtml(md) {
+  // 简单处理标题和换行，防止出现 markdown 格式
+  let html = md
+    .replace(/^### (.*)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.*)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.*)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+    .replace(/\*(.*?)\*/g, '<i>$1</i>')
+    .replace(/\n/g, '<br>');
+  return html;
+}
 
 const askQuestion = async () => {
   if (!question.value.trim()) {
@@ -39,14 +54,43 @@ const askQuestion = async () => {
   }
 
   // 添加用户消息
-  messages.value.push({ type: 'user', content: question.value });
-  const userMessage = question.value;
-  question.value = ''; 
+  messages.value.push({ role: 'user', content: question.value });
 
-  setTimeout(() => {
-    const aiReply = `${userMessage}是一个很好的问题！`;
-    messages.value.push({ type: 'ai', content: aiReply });
-  }, 1000); 
+  const replyMessage = messages.value.slice(-10).map(msg => ({
+    role: msg.role,
+    content: msg.content,
+  }));
+
+  replyMessage.unshift({
+    role: 'system',
+    content: '你是一个友好的AI助手，回答用户的问题。请保持简洁和友好。',
+  });
+
+  question.value = '';
+
+  try {
+    const res = await axios.post(
+      'https://api.deepseek.com/v1/chat/completions',
+      {
+        model: 'deepseek-chat',
+        messages: replyMessage,
+        temperature: 0.7,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+
+    const reply = res.data.choices[0].message.content
+    messages.value.push({ role: 'assistant', content: markdownToHtml(reply) }) 
+  } catch (err) {
+    console.error('请求异常:', err)
+    ElMessage.error('出错了，请检查 API Key 或网络连接')
+    messages.value.push({ role: 'assistant', content: '出错了，请检查 API Key 或网络连接' })
+  }
 };
 </script>
 
