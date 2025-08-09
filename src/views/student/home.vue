@@ -167,10 +167,10 @@ const askQuestion = async () => {
   background-color: rgba(255, 255, 255, 0.3); 
 }
 
-/* deep穿透 */
- :deep(.input-box .el-input__wrapper) {
-  background-color: rgba(255, 255, 255, 0.5) !important; /* 透明背景 */
-}
+/* deep穿透，使得输入框变透明 */
+ /* :deep(.input-box .el-input__wrapper) {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+} */
 
 .answer-button {
   flex-shrink: 0;
