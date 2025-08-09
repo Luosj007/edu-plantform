@@ -38,7 +38,7 @@ const messages = ref([
 const loading = ref(false);
 
 // 密钥
-const API_KEY = ''
+const API_KEY = process.env.VUE_APP_API_KEY;
 
 // 转换字体
 function markdownToHtml(md) {
