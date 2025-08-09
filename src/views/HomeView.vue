@@ -30,6 +30,10 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
+import MarkdownIt from 'markdown-it';
+
+// 初始化 markdown-it 实例
+const md = new MarkdownIt();
 
 const question = ref('');
 const messages = ref([
@@ -40,17 +44,9 @@ const loading = ref(false);
 // 密钥
 const API_KEY = process.env.VUE_APP_API_KEY;
 
-// 转换字体
-function markdownToHtml(md) {
-  // 简单处理标题和换行，防止出现 markdown 格式
-  let html = md
-    .replace(/^### (.*)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.*)$/gm, '<h2>$1</h2>')
-    .replace(/^# (.*)$/gm, '<h1>$1</h1>')
-    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-    .replace(/\*(.*?)\*/g, '<i>$1</i>')
-    .replace(/\n/g, '<br>');
-  return html;
+// 使用 markdown-it 解析 markdown 为 html
+function markdownToHtml(mdText) {
+  return md.render(mdText);
 }
 
 const askQuestion = async () => {
@@ -94,23 +90,24 @@ const askQuestion = async () => {
           'Content-Type': 'application/json',
         },
       }
-    )
+    );
 
-    const reply = res.data.choices[0].message.content
+    const reply = res.data.choices[0].message.content;
     const idx = messages.value.findIndex(m => m.loading);
     if (idx !== -1) messages.value.splice(idx, 1);
-    messages.value.push({ role: 'assistant', content: markdownToHtml(reply) }) 
+    messages.value.push({ role: 'assistant', content: markdownToHtml(reply) });
   } catch (err) {
     const idx = messages.value.findIndex(m => m.loading);
     if (idx !== -1) messages.value.splice(idx, 1);
-    console.error('请求异常:', err)
-    ElMessage.error('出错了，请检查 API Key 或网络连接')
-    messages.value.push({ role: 'assistant', content: '出错了，请检查 API Key 或网络连接' })
+    console.error('请求异常:', err);
+    ElMessage.error('出错了，请检查 API Key 或网络连接');
+    messages.value.push({ role: 'assistant', content: '出错了，请检查 API Key 或网络连接' });
   } finally {
     loading.value = false;
   }
 };
 </script>
+
 
 <style scoped>
 .ai-chat {
