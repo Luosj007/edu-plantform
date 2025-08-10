@@ -1,13 +1,13 @@
-# edu-platform
+# edu-platform-admin
 
 ## Project setup
 ```
-yarn install
+pnpm install
 ```
 
 ### Compiles and hot-reloads for development
 ```
-yarn serve
+pnpm run dev
 ```
 
 ### Compiles and minifies for production
