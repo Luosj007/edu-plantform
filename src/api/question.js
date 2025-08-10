@@ -1,3 +1,4 @@
+// 这是接口
 import request from '@/utils/request'
 
 export function getList(params) {
@@ -8,9 +9,9 @@ export function getList(params) {
   })
 }
 
-export function doubt(data) {
+export function getDoubt(data) {
   return request({
-    url: 'http://localhost:7001/admin/question/doubt',
+    url: 'http://localhost:7001/admin/question/getDoubt',
     method: 'post',
     data
   })

@@ -1,3 +1,4 @@
+// 这是调用ai的界面
 <template>
   <div>
     <div class="ai-chat">
@@ -28,11 +29,10 @@
 
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import MarkdownIt from 'markdown-it';
+import { getDoubt } from '@/api/question'; 
 
-// 初始化 markdown-it 实例
 const md = new MarkdownIt();
 
 const question = ref('');
@@ -41,10 +41,6 @@ const messages = ref([
 ]);
 const loading = ref(false);
 
-// 密钥
-const API_KEY = process.env.VUE_APP_API_KEY;
-
-// 使用 markdown-it 解析 markdown 为 html
 function markdownToHtml(mdText) {
   return md.render(mdText);
 }
@@ -56,55 +52,34 @@ const askQuestion = async () => {
   }
 
   messages.value.push({ role: 'user', content: question.value });
-
-  // 添加AI加载动画消息
   messages.value.push({ role: 'assistant', content: '思考中...', loading: true });
+
   loading.value = true;
 
-  const replyMessage = messages.value
-    .filter(m => !m.loading)
-    .slice(-10)
-    .map(msg => ({
-      role: msg.role,
-      content: msg.content,
-    }));
+  try {
+    const res = await getDoubt({ question: question.value });
+    console.log('接口返回',res);
+    
+    const idx = messages.value.findIndex(m => m.loading);
+    if (idx !== -1) messages.value.splice(idx, 1);
 
-  replyMessage.unshift({
-    role: 'system',
-    content: '你是一个友好的AI助手，回答用户的问题。请保持简洁和友好。',
-  });
+    if (res.success) {
+      messages.value.push({ role: 'assistant', content: markdownToHtml(res.data.answer) });
+    } else {
+      ElMessage.error('接口返回失败');
+      messages.value.push({ role: 'assistant', content: '抱歉，回答失败了。' });
+    }
+    } catch (err) {
+      const idx = messages.value.findIndex(m => m.loading);
+      if (idx !== -1) messages.value.splice(idx, 1);
+      console.error('请求异常:', err);
+      ElMessage.error('请求出错，请检查网络或接口');
+      messages.value.push({ role: 'assistant', content: '请求出错，请检查网络或接口' });
+    } finally {
+      loading.value = false;
+    }
 
   question.value = '';
-
-  try {
-    const res = await axios.post(
-      'https://api.deepseek.com/v1/chat/completions',
-      {
-        model: 'deepseek-chat',
-        messages: replyMessage,
-        temperature: 0.7,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    const reply = res.data.choices[0].message.content;
-    const idx = messages.value.findIndex(m => m.loading);
-    if (idx !== -1) messages.value.splice(idx, 1);
-    messages.value.push({ role: 'assistant', content: markdownToHtml(reply) });
-  } catch (err) {
-    const idx = messages.value.findIndex(m => m.loading);
-    if (idx !== -1) messages.value.splice(idx, 1);
-    console.error('请求异常:', err);
-    ElMessage.error('出错了，请检查 API Key 或网络连接');
-    messages.value.push({ role: 'assistant', content: '出错了，请检查 API Key 或网络连接' });
-  } finally {
-    loading.value = false;
-  }
 };
 </script>
 
@@ -126,7 +101,6 @@ const askQuestion = async () => {
   background-position: center;  
   background-repeat: no-repeat; 
 }
-
 
 .chat-messages {
   flex: 1;
@@ -159,7 +133,6 @@ const askQuestion = async () => {
   color: #333;
 }
 
-/* 聊天框大背景 */
 .chat-input {
   display: flex;
   gap: 10px;
@@ -167,16 +140,10 @@ const askQuestion = async () => {
   background-color: rgba(255, 255, 255, 0.3); 
 }
 
-/* deep穿透，使得输入框变透明 */
- /* :deep(.input-box .el-input__wrapper) {
-  background-color: rgba(255, 255, 255, 0.5) !important;
-} */
-
 .answer-button {
   flex-shrink: 0;
 }
 
-/* 以下是回答问题加载用的 */
 .loading-dots {
   display: inline-block;
   margin-left: 8px;
