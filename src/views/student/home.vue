@@ -33,6 +33,7 @@ import { getDoubt } from '@/api/question';
 
 const md = new MarkdownIt();
 const STORAGE_KEY = 'ai_chat_history';
+const LOADING_KEY = 'ai_chat_loading';
 
 const question = ref('');
 const messages = ref([]);
@@ -42,6 +43,7 @@ function markdownToHtml(mdText) {
   return md.render(mdText);
 }
 
+// 初始化
 onMounted(() => {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
@@ -49,15 +51,29 @@ onMounted(() => {
   } else {
     messages.value = [{ role: 'assistant', content: '您好，有什么可以帮您的吗？' }];
   }
+
+  const savedLoading = localStorage.getItem(LOADING_KEY);
+  if (savedLoading === 'true') {
+    loading.value = true;
+    // 确保界面显示思考中
+    if (!messages.value.some(m => m.loading)) {
+      messages.value.push({ role: 'assistant', content: '思考中...', loading: true });
+    }
+  }
 });
 
+// 保存消息和 loading 状态
 watch(messages, (val) => {
-  const lastTen = val.slice(-10); 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(lastTen));
+  const lastSix = val.slice(-6);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(lastSix));
 }, { deep: true });
 
+watch(loading, (val) => {
+  localStorage.setItem(LOADING_KEY, val ? 'true' : 'false');
+});
+
 const askQuestion = async () => {
-  if (loading.value) return; 
+  if (loading.value) return;
 
   if (!question.value.trim()) {
     ElMessage.warning('请输入你的问题');
@@ -73,9 +89,11 @@ const askQuestion = async () => {
 
   try {
     const res = await getDoubt({ question: userQ });
+    // 移除 loading 消息
     const idx = messages.value.findIndex(m => m.loading);
     if (idx !== -1) messages.value.splice(idx, 1);
-    if (res.success) {
+
+    if (res.success && res.data?.answer) {
       messages.value.push({ role: 'assistant', content: markdownToHtml(res.data.answer) });
     } else {
       ElMessage.error('接口返回失败');
@@ -102,12 +120,12 @@ const askQuestion = async () => {
   border-radius: 5px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
-  position: relative; 
+  position: relative;
   z-index: 0;
   background-image: url('@/assets/1.jpeg');
-  background-size: cover;       
-  background-position: center;  
-  background-repeat: no-repeat; 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .chat-messages {
@@ -117,7 +135,7 @@ const askQuestion = async () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background-color: rgba(255, 255, 255, 0.3); 
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .message {
@@ -145,7 +163,7 @@ const askQuestion = async () => {
   display: flex;
   gap: 10px;
   padding: 10px;
-  background-color: rgba(255, 255, 255, 0.3); 
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .answer-button {
